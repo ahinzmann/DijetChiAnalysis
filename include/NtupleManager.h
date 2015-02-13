@@ -12,6 +12,7 @@ public:
    ~NtupleManager( void );
    
    void ConnectVariables( std::string treeName );
+   void ConnectVariablesDijetTuple( std::string treeName );
    InputData getData( void ){return theData_;}
    
 private:

@@ -26,6 +26,7 @@ ChiAnalysis::ChiAnalysis()
    DeclareProperty( "isSignal"         , isSignal_	    );
    DeclareProperty( "runOnMC"          , runOnMC_	    );
    DeclareProperty( "Trigger"          , Trigger_	    );
+   DeclareProperty( "runOnDijetTuple"          , runOnDijetTuple_	    );
 
    /* weights settings */
    DeclareProperty( "LHEsample"         , LHEsample_	      );
@@ -162,7 +163,10 @@ void ChiAnalysis::EndInputData( const SInputData& ) throw( SError ) {
 
 void ChiAnalysis::BeginInputFile( const SInputData& ) throw( SError ) {
 
-   theNtupleManager_->ConnectVariables( InputTreeName_ );
+   if (runOnDijetTuple_)
+     theNtupleManager_->ConnectVariablesDijetTuple( InputTreeName_ );
+   else 
+     theNtupleManager_->ConnectVariables( InputTreeName_ );
 
    return;
 
@@ -174,8 +178,10 @@ void ChiAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
       
    nEvents_++;
    
-   if( !passedTrigger() ) throw SError( SError::SkipEvent );  
-   nPassedTrigger_++;
+   passedTrigger_=passedTrigger();
+   if(passedTrigger_)
+      nPassedTrigger_++;
+   if ( (Trigger_) && (!passedTrigger_) ) throw SError( SError::SkipEvent );  
 
    if( passedSelections() ){
 
@@ -195,11 +201,14 @@ void ChiAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
 //==============================================================================================
 bool ChiAnalysis::passedTrigger( void ){
 
-   if( !Trigger_ ) return true;
-
-   if( data_.isFired_HLT_PFHT900_v1 ){ nPassedTrigger_++; return true;}
-   else if( data_.isFired_HLT_AK8PFJet360TrimMod_Mass30_v1 ){ nPassedTrigger_++; return true;}
-   else return false;
+   if( data_.isFired_HLT_PFHT900_v1 ){ return true;}
+   else if( data_.isFired_HLT_AK8PFJet360TrimMod_Mass30_v1 ){ return true;}
+   else if(data_.triggerResult) {
+     bool pass=false;
+     for( unsigned int v = 0; v < (data_.triggerResult)->size(); ++v )
+        if((*data_.triggerResult)[v]) pass=true;
+     return pass;
+   }
 
    return false;
     
@@ -210,9 +219,13 @@ bool ChiAnalysis::passedSelections( void ){
 
    if(data_.njetsAK8<2) return false;
    n2Jets_++;  
-
-   if( (*data_.jetAK8_IDLoose)[0] != 1 ) return false;
-   if( (*data_.jetAK8_IDLoose)[1] != 1 ) return false;
+   if(data_.jetAK8_IDLoose) {
+      if( (*data_.jetAK8_IDLoose)[0] != 1 ) return false;
+      if( (*data_.jetAK8_IDLoose)[1] != 1 ) return false;
+   } else if(data_.jetAK8_IDLooseInt) {
+      if( (*data_.jetAK8_IDLooseInt)[0] != 1 ) return false;
+      if( (*data_.jetAK8_IDLooseInt)[1] != 1 ) return false;
+   } else return false;
    nJetID_++;  
 
    jet1.SetPtEtaPhiM( (*data_.jetAK8_pt)[0], (*data_.jetAK8_eta)[0], (*data_.jetAK8_phi)[0], (*data_.jetAK8_mass)[0] );
@@ -247,6 +260,7 @@ void ChiAnalysis::fillHistos( void ){
          
    /* dijet */
    Hist( "dijet_mass"            )->Fill( dijet_mass, weight_ );
+   Hist( "dijet_mass_triggered"            )->Fill( dijet_mass, weight_*passedTrigger_ );
    Hist( "dijet_chi"             )->Fill( dijet_chi, weight_ );
    Hist( "dijet_yboost"          )->Fill( dijet_yboost, weight_ );
    Hist( "jet1_pt"          )->Fill( jet1.Pt(), weight_ );
@@ -257,7 +271,10 @@ void ChiAnalysis::fillHistos( void ){
    Hist( "jet2_phi"          )->Fill( jet2.Phi(), weight_ );
    Hist( "deltaPtSumPt"          )->Fill( (jet1.Pt()-jet2.Pt())/(jet1.Pt()+jet2.Pt()), weight_ );
    Hist( "sumPt"          )->Fill( jet1.Pt()+jet2.Pt(), weight_ );
-//   Hist( "metSumEt"          )->Fill( (*data_.MET_et)[0]/(*data_.MET_sumEt)[0], weight_ );
+//   if(MET>0)
+//     Hist( "metSumEt"          )->Fill( data_.MET/data_.sumEt, weight_ );
+//   else
+//     Hist( "metSumEt"          )->Fill( (*data_.MET_et)[0]/(*data_.MET_sumEt)[0], weight_ );
    
    /* other histos */
    Hist( "genweight"        	 )->Fill( lheweight_ );

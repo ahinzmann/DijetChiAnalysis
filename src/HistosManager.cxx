@@ -21,6 +21,7 @@ void HistosManager::bookHistos( void ){
 
    /* dijet */
    theAnalysis_->Book( TH1F( "dijet_mass"    	    , "dijet mass" 	     ,    130,  0. , 13000.) );
+   theAnalysis_->Book( TH1F( "dijet_mass_triggered"    	    , "dijet mass triggered" 	     ,    130,  0. , 13000.) );
    theAnalysis_->Book( TH1F( "dijet_chi"    	    , "dijet chi" 	     ,    15,   1. ,  16.  ) );
    theAnalysis_->Book( TH1F( "dijet_yboost"    	    , "dijet yboost" 	     ,    15,   0. ,  1.5  ) );
    theAnalysis_->Book( TH1F( "jet1_pt"    	    , "jet 1 pt" 	     ,    60,  0. , 6000.) );
@@ -45,6 +46,7 @@ void HistosManager::formatHistos( void ){
 
    /* MWH */         
    theAnalysis_->Hist( "dijet_mass"        )->GetXaxis()->SetTitle( "dijet mass [GeV]"           	    );
+   theAnalysis_->Hist( "dijet_mass_triggered"        )->GetXaxis()->SetTitle( "dijet mass [GeV]"           	    );
    theAnalysis_->Hist( "dijet_chi"        )->GetXaxis()->SetTitle( "#chi_{dijet}"           	    );
    theAnalysis_->Hist( "dijet_yboost"        )->GetXaxis()->SetTitle( "y_{boost}"           	    );
    theAnalysis_->Hist( "jet1_pt"        )->GetXaxis()->SetTitle( "p_{T,1}"           	    );
@@ -65,6 +67,7 @@ void HistosManager::formatHistos( void ){
    theAnalysis_->Hist( "nVertices"            )->GetXaxis()->SetTitle( "# primary vertices"                 );
 
    Utilities::OverflowToLast( theAnalysis_->Hist( "dijet_mass"	      ) );
+   Utilities::OverflowToLast( theAnalysis_->Hist( "dijet_mass_triggered"	      ) );
 
    Utilities::OverflowToLast( theAnalysis_->Hist( "genweight"         ) );
    Utilities::OverflowToLast( theAnalysis_->Hist( "PUWeights"         ) );

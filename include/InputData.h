@@ -38,6 +38,7 @@ public:
    std::vector<int  >*             lep_isHighPtMuon      ;
    std::vector<int  >*  	   lep_isGlobalMuon	 ;
    
+   float 	           	   MET                   ;
    std::vector<float>* 	           MET_et                ;
 //   std::vector<float>* 	           MET_sumEt             ;
    std::vector<float>* 	           MET_phi               ;
@@ -50,6 +51,8 @@ public:
    std::vector<float>*		   jetAK4_csv	     	 ;
    std::vector<int  >*		   jetAK4_flavor	 ;
    std::vector<bool  >*  	   jetAK4_IDLoose        ;  
+   std::vector<int  >*  	   jetAK4_IDLooseInt        ;  
+   std::vector<float>*             jetAK4_JEC            ;
    
    int                             njetsAK8          	 ;
    std::vector<float>*		   jetAK8_pt	     	 ;
@@ -68,8 +71,10 @@ public:
    std::vector<float>*		   jetAK8_tau2	     	 ;
    std::vector<float>*		   jetAK8_tau3	     	 ;
    std::vector<bool  >*  	   jetAK8_IDLoose        ;  
+   std::vector<int  >*  	   jetAK8_IDLooseInt        ;  
    std::vector<int   >*  	   jetAK8_flavor         ;
    std::vector<int   >*  	   jetAK8_nconstituents  ;
+   std::vector<float>*             jetAK8_JEC            ;
       
    int                             njetsAK8pruned    	 ;
    std::vector<float>*		   jetAK8pruned_pt   	 ;
@@ -88,10 +93,12 @@ public:
    std::vector<int  >*             nPUTrue               ;
    std::vector<int  >*             bX                    ;
    int                             nPVs                  ; 
+   float                           rho                   ;
    int                             EVENT_event           ;
    int                             EVENT_run             ;
    int                             EVENT_lumi            ;
 
+   std::vector<bool>*              triggerResult;
    bool isFired_HLT_PFHT900_v1 ;
    bool isFired_HLT_AK8PFJet360TrimMod_Mass30_v1;
               

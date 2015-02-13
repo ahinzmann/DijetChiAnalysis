@@ -85,6 +85,7 @@ private:
    bool           isSignal_        ;
    bool           runOnMC_         ;
    bool           Trigger_         ;
+   bool           runOnDijetTuple_         ;
 
    /* weights settings */            
    std::string    LHEsample_       ;
@@ -101,6 +102,7 @@ private:
    float  dijet_mass  ;
    float  dijet_chi   ;
    float  dijet_yboost;
+   bool    passedTrigger_         ;  
    
    int    nEvents_    ;
    int    nPassedTrigger_         ;  
