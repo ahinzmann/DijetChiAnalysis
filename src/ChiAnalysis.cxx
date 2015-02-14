@@ -217,19 +217,19 @@ bool ChiAnalysis::passedTrigger( void ){
 //==============================================================================================
 bool ChiAnalysis::passedSelections( void ){
 
-   if(data_.njetsAK8<2) return false;
+   if(data_.njetsAK4<2) return false;
    n2Jets_++;  
-   if(data_.jetAK8_IDLoose) {
-      if( (*data_.jetAK8_IDLoose)[0] != 1 ) return false;
-      if( (*data_.jetAK8_IDLoose)[1] != 1 ) return false;
-   } else if(data_.jetAK8_IDLooseInt) {
-      if( (*data_.jetAK8_IDLooseInt)[0] != 1 ) return false;
-      if( (*data_.jetAK8_IDLooseInt)[1] != 1 ) return false;
+   if(data_.jetAK4_IDLoose) {
+      if( (*data_.jetAK4_IDLoose)[0] != 1 ) return false;
+      if( (*data_.jetAK4_IDLoose)[1] != 1 ) return false;
+   } else if(data_.jetAK4_IDLooseInt) {
+      if( (*data_.jetAK4_IDLooseInt)[0] != 1 ) return false;
+      if( (*data_.jetAK4_IDLooseInt)[1] != 1 ) return false;
    } else return false;
    nJetID_++;  
 
-   jet1.SetPtEtaPhiM( (*data_.jetAK8_pt)[0], (*data_.jetAK8_eta)[0], (*data_.jetAK8_phi)[0], (*data_.jetAK8_mass)[0] );
-   jet2.SetPtEtaPhiM( (*data_.jetAK8_pt)[1], (*data_.jetAK8_eta)[1], (*data_.jetAK8_phi)[1], (*data_.jetAK8_mass)[1] );
+   jet1.SetPtEtaPhiE( (*data_.jetAK4_pt)[0], (*data_.jetAK4_eta)[0], (*data_.jetAK4_phi)[0], (*data_.jetAK4_e)[0] );
+   jet2.SetPtEtaPhiE( (*data_.jetAK4_pt)[1], (*data_.jetAK4_eta)[1], (*data_.jetAK4_phi)[1], (*data_.jetAK4_e)[1] );
    dijet=jet1+jet2;
 
    dijet_mass = dijet.M();
